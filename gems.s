@@ -28,7 +28,18 @@ _Z80CODE
 _Z80END
 ;     align     2
 	even
-
+	
+CustomBnk = 0
+	if	CustomBnk
+_patchbank
+     binclude   "TempDrvr/Sonic Spinball (Japan) - 01 Instruments.bin"
+_envbank
+     binclude   "TempDrvr/Sonic Spinball (Japan) - 02 Envelopes.bin"
+_seqbank
+     binclude "TempDrvr/Sonic Spinball (Japan) - 03 Sequences.bin"
+_sampbank
+     binclude "TempDrvr/Sonic Spinball (Japan) - 04 Samples.bin"
+	else
 _patchbank
      include   pbank.asm
 _envbank
@@ -37,6 +48,7 @@ _seqbank
      include sbank.asm
 _sampbank
      include dbank.asm
+	endif
 
 ;     align     2
 	even

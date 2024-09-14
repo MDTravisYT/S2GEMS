@@ -4628,6 +4628,11 @@ Level_PlayBgm:
 	move.b	(a1,d0.w),d0	; load from music playlist
 	move.w	d0,(Level_Music).w	; store level music
 	bsr.w	PlayMusic	; play level music
+	jsr	_gemsstopall
+	move.l	#1,-(sp)
+	jsr	_gemsstartsong		; start song
+	adda.w	#4,sp
+	
 	move.b	#$34,(Object_RAM+$80).w ; load Obj34 (level title card) at $FFFFB080
 ; loc_40DA:
 Level_TtlCard:
