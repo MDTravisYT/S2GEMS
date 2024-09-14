@@ -86532,16 +86532,9 @@ ArtNem_VinePulley:	BINCLUDE	"art/nemesis/Vine that lowers from MCZ.bin"
 ArtNem_MCZGateLog:	BINCLUDE	"art/nemesis/Drawbridge logs from MCZ.bin"
 
 ; end of 'ROM'
-	if padToPowerOfTwo && (*)&(*-1)
-		cnop	-1,2<<lastbit(*-1)
-		dc.b	0
-paddingSoFar	:= paddingSoFar+1
-	else
-		even
-	endif
-	if MOMPASS=2
-		; "About" because it will be off by the same amount that Size_of_Snd_driver_guess is incorrect (if you changed it), and because I may have missed a small amount of internal padding somewhere
-		message "rom size is $\{*} bytes (\{*/1024.0} kb). About $\{paddingSoFar} bytes are padding. "
-	endif
+
+even
+	include		sound.s
+
 EndOfRom:
 	END
