@@ -4629,7 +4629,7 @@ Level_PlayBgm:
 	move.w	d0,(Level_Music).w	; store level music
 	bsr.w	PlayMusic	; play level music
 	jsr	_gemsstopall
-	move.l	#1,-(sp)
+	move.l	#$0B,-(sp)
 	jsr	_gemsstartsong		; start song
 	adda.w	#4,sp
 	
@@ -24100,7 +24100,7 @@ loc_12ECC:
 	st	objoff_30(a0)
 ;	moveq	#$19+$80,d0 ; title music
 ;	bra.w	JmpTo4_PlayMusic
-	move.l	#0,-(sp)
+	move.l	#$10,-(sp)
 	jsr	_gemsstartsong		; start song
 	adda.w	#4,sp
 	rts
@@ -33461,8 +33461,12 @@ Sonic_TurnLeft:
 	blt.s	return_1A744
 	move.b	#$D,anim(a0)	; use "stopping" animation
 	bclr	#0,status(a0)
-	move.w	#$A4,d0
-	jsr	(PlaySound).l
+;	move.w	#$A4,d0
+;	jsr	(PlaySound).l
+
+	move.l	#$73,-(sp)
+	jsr	_gemsstartsong		; start song
+	adda.w	#4,sp
 	cmpi.b	#$C,air_left(a0)
 	bcs.s	return_1A744	; if he's drowning, branch to not make dust
 	move.b	#6,(Sonic_Dust+routine).w
@@ -33886,8 +33890,11 @@ Sonic_Jump:
 	addq.l	#4,sp
 	move.b	#1,jumping(a0)
 	clr.b	stick_to_convex(a0)
-	move.w	#$A0,d0
-	jsr	(PlaySound).l	; play jumping sound
+;	move.w	#$A0,d0
+;	jsr	(PlaySound).l	; play jumping sound
+	move.l	#$58,-(sp)
+	jsr	_gemsstartsong		; start song
+	adda.w	#4,sp
 	move.b	#$13,y_radius(a0)
 	move.b	#9,x_radius(a0)
 	btst	#2,status(a0)
