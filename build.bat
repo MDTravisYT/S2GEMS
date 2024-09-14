@@ -26,7 +26,7 @@ REM // -c outputs a shared file (s2.h)
 REM // -A gives us a small speedup
 set AS_MSGPATH=win32/msg
 set USEANSI=n
-"win32/asw" -xx -c -A s2.asm
+"win32/asw" -xx -c -A -L s2.asm
 
 REM // combine the assembler output into a rom
 IF EXIST s2.p "win32/s2p2bin" s2.p s2built.bin s2.h

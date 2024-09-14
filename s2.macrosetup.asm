@@ -1,6 +1,6 @@
 
 	padding off	; we don't want AS padding out dc.b instructions
-	listing off	; we don't need to generate anything for a listing file
+;	listing off	; we don't need to generate anything for a listing file
 	supmode on	; we don't need warnings about privileged instructions
 
 

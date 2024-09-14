@@ -457,6 +457,7 @@ clearRAM macro addr,length
 
 ; tells the Z80 to stop, and waits for it to finish stopping (acquire bus)
 stopZ80 macro
+	jsr		_gemsholdz80
 ;	move.w	#$100,(Z80_Bus_Request).l ; stop the Z80
 ;-	btst	#0,(Z80_Bus_Request).l
 ;	bne.s	- ; loop until it says it's stopped
@@ -464,6 +465,7 @@ stopZ80 macro
 
 ; tells the Z80 to start again
 startZ80 macro
+	jsr		_gemsreleasez80
 ;	move.w	#0,(Z80_Bus_Request).l    ; start the Z80
     endm
 
@@ -477,28 +479,78 @@ rom_ptr_z80 macro addr
 
 ; >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 ; start of ROM
+m68k
+	include	"Debugger.asm"
 
 StartOfRom:
     if * <> 0
 	fatal "StartOfRom was $\{*} but it should be 0"
     endif
 ;Vectors:
-	dc.l System_Stack, EntryPoint, ErrorTrap, ErrorTrap; 4
-	dc.l ErrorTrap,	ErrorTrap, ErrorTrap, ErrorTrap; 8
-	dc.l ErrorTrap,	ErrorTrap, ErrorTrap, ErrorTrap; 12
-	dc.l ErrorTrap,	ErrorTrap, ErrorTrap, ErrorTrap; 16
-	dc.l ErrorTrap,	ErrorTrap, ErrorTrap, ErrorTrap; 20
-	dc.l ErrorTrap,	ErrorTrap, ErrorTrap, ErrorTrap; 24
-	dc.l ErrorTrap,	ErrorTrap, ErrorTrap, ErrorTrap; 28
-	dc.l H_Int,     ErrorTrap, V_Int,     ErrorTrap; 32
-	dc.l ErrorTrap,	ErrorTrap, ErrorTrap, ErrorTrap; 36
-	dc.l ErrorTrap,	ErrorTrap, ErrorTrap, ErrorTrap; 40
-	dc.l ErrorTrap,	ErrorTrap, ErrorTrap, ErrorTrap; 44
-	dc.l ErrorTrap,	ErrorTrap, ErrorTrap, ErrorTrap; 48
-	dc.l ErrorTrap,	ErrorTrap, ErrorTrap, ErrorTrap; 52
-	dc.l ErrorTrap,	ErrorTrap, ErrorTrap, ErrorTrap; 56
-	dc.l ErrorTrap,	ErrorTrap, ErrorTrap, ErrorTrap; 60
-	dc.l ErrorTrap,	ErrorTrap, ErrorTrap, ErrorTrap; 64
+	dc.l System_Stack	; Initial stack pointer value
+	dc.l EntryPoint		; Start of program
+	dc.l BusError		; Bus error
+	dc.l AddressError	; Address error (4)
+	dc.l IllegalInstr	; Illegal instruction
+	dc.l ZeroDivide		; Division by zero
+	dc.l ChkInstr		; CHK exception
+	dc.l TrapvInstr		; TRAPV exception (8)
+	dc.l PrivilegeViol	; Privilege violation
+	dc.l Trace			; TRACE exception
+	dc.l Line1010Emu	; Line-A emulator
+	dc.l Line1111Emu	; Line-F emulator (12)
+	dc.l ErrorExcept	; Unused (reserved)
+	dc.l ErrorExcept	; Unused (reserved)
+	dc.l ErrorExcept	; Unused (reserved)
+	dc.l ErrorExcept	; Unused (reserved) (16)
+	dc.l ErrorExcept	; Unused (reserved)
+	dc.l ErrorExcept	; Unused (reserved)
+	dc.l ErrorExcept	; Unused (reserved)
+	dc.l ErrorExcept	; Unused (reserved) (20)
+	dc.l ErrorExcept	; Unused (reserved)
+	dc.l ErrorExcept	; Unused (reserved)
+	dc.l ErrorExcept	; Unused (reserved)
+	dc.l ErrorExcept	; Unused (reserved) (24)
+	dc.l ErrorExcept	; Spurious exception
+	dc.l ErrorExcept	; IRQ level 1
+	dc.l ErrorExcept	; IRQ level 2
+	dc.l ErrorExcept	; IRQ level 3 (28)
+	dc.l H_Int			; IRQ level 4 (horizontal retrace interrupt)
+	dc.l ErrorExcept	; IRQ level 5
+	dc.l V_Int			; IRQ level 6 (vertical retrace interrupt)
+	dc.l ErrorExcept	; IRQ level 7 (32)
+	dc.l ErrorExcept	; TRAP #00 exception
+	dc.l ErrorExcept	; TRAP #01 exception
+	dc.l ErrorExcept	; TRAP #02 exception
+	dc.l ErrorExcept	; TRAP #03 exception (36)
+	dc.l ErrorExcept	; TRAP #04 exception
+	dc.l ErrorExcept	; TRAP #05 exception
+	dc.l ErrorExcept	; TRAP #06 exception
+	dc.l ErrorExcept	; TRAP #07 exception (40)
+	dc.l ErrorExcept	; TRAP #08 exception
+	dc.l ErrorExcept	; TRAP #09 exception
+	dc.l ErrorExcept	; TRAP #10 exception
+	dc.l ErrorExcept	; TRAP #11 exception (44)
+	dc.l ErrorExcept	; TRAP #12 exception
+	dc.l ErrorExcept	; TRAP #13 exception
+	dc.l ErrorExcept	; TRAP #14 exception
+	dc.l ErrorExcept	; TRAP #15 exception (48)
+	dc.l ErrorExcept	; Unused (reserved)
+	dc.l ErrorExcept	; Unused (reserved)
+	dc.l ErrorExcept	; Unused (reserved)
+	dc.l ErrorExcept	; Unused (reserved) (52)
+	dc.l ErrorExcept	; Unused (reserved)
+	dc.l ErrorExcept	; Unused (reserved)
+	dc.l ErrorExcept	; Unused (reserved)
+	dc.l ErrorExcept	; Unused (reserved) (56)
+	dc.l ErrorExcept	; Unused (reserved)
+	dc.l ErrorExcept	; Unused (reserved)
+	dc.l ErrorExcept	; Unused (reserved)
+	dc.l ErrorExcept	; Unused (reserved) (60)
+	dc.l ErrorExcept	; Unused (reserved)
+	dc.l ErrorExcept	; Unused (reserved)
+	dc.l ErrorExcept	; Unused (reserved)
+	dc.l ErrorExcept	; Unused (reserved) (64)
 ; byte_200:
 Header:
 	dc.b "SEGA GENESIS    " ; Console name
@@ -662,7 +714,7 @@ Z80StartupCodeBegin: ; loc_2CA:
     dephase ; stop pretending
     CPU 68000	; switch back to 68000 code
     padding off ; unfortunately our flags got reset so we have to set them again...
-    listing off
+ ;   listing off
     supmode on
     else ; due to an address range limitation I could work around but don't think is worth doing so:
 ;	message "Warning: using pre-assembled Z80 startup code."
@@ -731,6 +783,7 @@ GameClrRAM:
 
 	bsr.w	VDPSetupGame
 ;	bsr.w	JmpTo_SoundDriverLoad
+	jsr		_sfxinit
 	bsr.w	JoypadInit
 	move.b	#0,(Game_Mode).w	; => SegaScreen
 ; loc_394:
@@ -1459,6 +1512,7 @@ loc_1072:
 ; Input our music/sound selection to the sound driver.
 
 sndDriverInput:
+	jmp _gemsdmastart
 	lea	(Music_to_play&$00FFFFFF).l,a0
 	lea	($A01B80).l,a1 ; $A01B80
 	cmpi.b	#$80,8(a1)	; If this (zReadyFlag) isn't $80, the driver is processing a previous sound request.
@@ -24038,8 +24092,13 @@ loc_12ECC:
 	move.b	#$C9,(a1) ; load objC9 (palette change)
 	move.b	#0,subtype(a1)
 	st	objoff_30(a0)
-	moveq	#$19+$80,d0 ; title music
-	bra.w	JmpTo4_PlayMusic
+;	moveq	#$19+$80,d0 ; title music
+;	bra.w	JmpTo4_PlayMusic
+
+	move.b	#0,	d0
+	jsr	_gemsstartsong		; start song
+	rts
+
 ; ===========================================================================
 
 loc_12EE8:
@@ -86535,6 +86594,19 @@ ArtNem_MCZGateLog:	BINCLUDE	"art/nemesis/Drawbridge logs from MCZ.bin"
 
 even
 	include		sound.s
+; ==============================================================
+; --------------------------------------------------------------
+; Debugging modules
+; --------------------------------------------------------------
 
+   include   "ErrorHandler.asm"
+
+; --------------------------------------------------------------
+; WARNING!
+;	DO NOT put any data from now on! DO NOT use ROM padding!
+;	Symbol data should be appended here after ROM is compiled
+;	by ConvSym utility, otherwise debugger modules won't be able
+;	to resolve symbol names.
+; --------------------------------------------------------------
 EndOfRom:
 	END
