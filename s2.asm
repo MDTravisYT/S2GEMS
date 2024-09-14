@@ -502,10 +502,10 @@ StartOfRom:
 ; byte_200:
 Header:
 	dc.b "SEGA GENESIS    " ; Console name
-	dc.b "(C)SEGA 1992.SEP" ; Copyright/Date
-	dc.b "SONIC THE             HEDGEHOG 2                " ; Domestic name
-	dc.b "SONIC THE             HEDGEHOG 2                " ; International name
-	dc.b "GM 00001051-01"   ; Version
+	dc.b "MDTRAVIS SEP2024" ; Copyright/Date
+	dc.b "GEMS IN SONIC THE HEDGEHOG 2                    " ; Domestic name
+	dc.b "GEMS IN SONIC THE HEDGEHOG 2                    " ; International name
+	dc.b "GM XXXXXXXX-XX"   ; Version
 ; word_18E
 Checksum:
 	dc.w $D951		; Checksum (patched later if incorrect)
