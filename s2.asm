@@ -1512,7 +1512,7 @@ loc_1072:
 ; Input our music/sound selection to the sound driver.
 
 sndDriverInput:
-	jmp _gemsdmastart
+;	jmp _gemsdmastart
 	lea	(Music_to_play&$00FFFFFF).l,a0
 	lea	($A01B80).l,a1 ; $A01B80
 	cmpi.b	#$80,8(a1)	; If this (zReadyFlag) isn't $80, the driver is processing a previous sound request.
@@ -24094,9 +24094,9 @@ loc_12ECC:
 	st	objoff_30(a0)
 ;	moveq	#$19+$80,d0 ; title music
 ;	bra.w	JmpTo4_PlayMusic
-
-	move.b	#0,	d0
+	move.l	#0,-(sp)
 	jsr	_gemsstartsong		; start song
+	adda.w	#4,sp
 	rts
 
 ; ===========================================================================
@@ -86474,8 +86474,7 @@ Objects_Null3:	BINCLUDE	"level/objects/Null_3.bin"
 ; --------------------------------------------------------------------------------------
 	align $1000
 
-
-
+	include		sound.s
 
 ; ---------------------------------------------------------------------------
 ; Subroutine to load the sound driver
@@ -86592,8 +86591,6 @@ ArtNem_MCZGateLog:	BINCLUDE	"art/nemesis/Drawbridge logs from MCZ.bin"
 
 ; end of 'ROM'
 
-even
-	include		sound.s
 ; ==============================================================
 ; --------------------------------------------------------------
 ; Debugging modules
