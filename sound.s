@@ -12,7 +12,7 @@
 ;{----------------------------------------------------------------------}
 
 _sfxinit
-		movem.l	d0/a0,-(sp)	; gems uses these registers
+		movem.l	d0/a2,-(sp)	; gems uses these registers
 ;  gemsinit(&patchbank, &envbank, &seqbank, &sampbank);
 		move.l	#_sampbank,-(sp)
 		move.l	#_seqbank,-(sp)
@@ -41,7 +41,7 @@ _sfxinit
 	; adjust sp
 		add.l	#8,sp
 
-		movem.l	(sp)+,d0/a0	; restore used registers
+		movem.l	(sp)+,d0/a2	; restore used registers
 		rts
 
 ;{----------------------------------------------------------------------}
@@ -52,13 +52,13 @@ _sfxinit
 ;{----------------------------------------------------------------------}
 _sfxstartsound:
 	; start the sound
-		move.l	a0,-(sp)
+		move.l	a2,-(sp)
 		move.l	d0,-(sp)	; sound number
 		move.l	#15,-(sp)	; channel number
 		jsr	_gemsnoteon
 	; adjust sp
 		add.l	#8,sp
-		move.l	(sp)+,a0
+		move.l	(sp)+,a2
 		rts
 
 ;{----------------------------------------------------------------------}
@@ -69,12 +69,12 @@ _sfxstartsound:
 ;{----------------------------------------------------------------------}
 _sfxstopsound:
 	; stop the sound
-		move.l	a0,-(sp)
+		move.l	a2,-(sp)
 		move.l	d0,-(sp)	; sound number
 		move.l	#15,-(sp)	; channel number
 		jsr	_gemsnoteoff
 	; adjust sp
 		add.l	#8,sp
-		move.l	(sp)+,a0
+		move.l	(sp)+,a2
 		rts
 

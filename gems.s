@@ -18,7 +18,7 @@
 ;
 ;     OPT  E,CASE
 
-; N.B.  in routines in this file, a0 and d0 are freely trashed
+; N.B.  in routines in this file, a2 and d0 are freely trashed
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; DATA INCLUDES ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -125,28 +125,28 @@ _gemsreleasez80
 ;
 
 _gemsloadz80
-          move.l    a1,-(sp)
+          move.l    a3,-(sp)
           move.w    sr,-(SP)
           or.w #$0700,sr      ; disable ints
 
           move.w    #$100,BUSRES        ; Z80 bus reset off
           jsr  _gemsholdz80
 
-          lea  _Z80CODE,a0         ; copy from 68k to z80 addr space
-          lea  _Z80END,a1
-          move.l    a1,d0
-          sub.l     a0,d0
+          lea  _Z80CODE,a2         ; copy from 68k to z80 addr space
+          lea  _Z80END,a3
+          move.l    a3,d0
+          sub.l     a2,d0
           subq #1,d0               ; d0 is # of byte to copy - 1 (for dbra)
-          lea  Z80RAM,a1
-lzlp1          move.b    (a0)+,(a1)+
+          lea  Z80RAM,a3
+lzlp1          move.b    (a2)+,(a3)+
           dbra d0,lzlp1
 
-lzlp2          move.b    #0,(a1)+       ; zero fill remainder of 8k block
-          cmpa.l    #(Z80RAM+$2000),a1
+lzlp2          move.b    #0,(a3)+       ; zero fill remainder of 8k block
+          cmpa.l    #(Z80RAM+$2000),a3
           bne.s     lzlp2
 
           move.w    (sp)+,sr
-          move.l    (sp)+,a1
+          move.l    (sp)+,a3
           rts
 
 ;
@@ -171,20 +171,20 @@ szlp      subq.l    #1,d0
 ;
 ; stdsetup - setup these regs:
 ;  d1 - the old value of wptr
-;  a0 - Z80RAM+$36(wptr)
-;  a1 - Z80RAM+$1B40(fifo)
+;  a2 - Z80RAM+$36(wptr)
+;  a3 - Z80RAM+$1B40(fifo)
 ; also save the sr, turns off ints, and holds the z80
 ;
 stdsetup
-          move.l    (sp)+,a0       ; get the return addr
+          move.l    (sp)+,a2       ; get the return addr
           link a6,#0               ; set up the link
-          movem.l   d1/a1,-(sp)         ; save some regs
+          movem.l   d1/a3,-(sp)         ; save some regs
           move.w    sr,-(SP)
 
-          move.l    a0,-(sp)       ; push the return addr
+          move.l    a2,-(sp)       ; push the return addr
 
-          lea  Z80RAM+$36,a0       ; a0 points to wptr
-          lea  Z80RAM+$1B40,a1          ; a1 points to fifo
+          lea  Z80RAM+$36,a2       ; a2 points to wptr
+          lea  Z80RAM+$1B40,a3          ; a3 points to fifo
 
           or.w #$0700,sr      ; disable ints
 
@@ -192,7 +192,7 @@ stdsetup
 sslp      btst.b    #0,BUSREQ      ; spin on bus grant
           bne.s     sslp
 
-          move.b    (a0),d1             ; d1 is write index into fifo
+          move.b    (a2),d1             ; d1 is write index into fifo
           ext.w     d1             ; extend to 16 bits
 
           rts
@@ -203,7 +203,7 @@ sslp      btst.b    #0,BUSREQ      ; spin on bus grant
 stdcleanup
           move.w    #$0,BUSREQ          ; Z80 bus request off
           move.w    (sp)+,sr
-          movem.l   (sp)+,d1/a1
+          movem.l   (sp)+,d1/a3
           unlk a6
           rts
 
@@ -211,11 +211,11 @@ stdcleanup
 ; stdcmdwrite - write a command to the z80(-1, d0), assuming:
 ;  d0 - the byte
 ;  d1 - the value of wptr
-;  a0 - Z80RAM+$36(wptr)
-;  a1 - Z80RAM+$1B40(fifo)
+;  a2 - Z80RAM+$36(wptr)
+;  a3 - Z80RAM+$1B40(fifo)
 ;
 stdcmdwrite
-          move.b    #-1,0(a1,d1.w)          ; write into fifo
+          move.b    #-1,0(a3,d1.w)          ; write into fifo
 
           addq.b    #1,d1               ; increment write index mod 64
           andi.b    #$3F,d1
@@ -225,15 +225,15 @@ stdcmdwrite
 ; stdwrite - write a byte to the z80, assuming:
 ;  d0 - the byte
 ;  d1 - the value of wptr
-;  a0 - Z80RAM+$36(wptr)
-;  a1 - Z80RAM+$1B40(fifo)
+;  a2 - Z80RAM+$36(wptr)
+;  a3 - Z80RAM+$1B40(fifo)
 ;
 stdwrite
-          move.b    d0,0(a1,d1.w)      ; write into fifo
+          move.b    d0,0(a3,d1.w)      ; write into fifo
 
           addq.b    #1,d1               ; increment write index mod 64
           andi.b    #$3F,d1
-          move.b    d1,(a0)             ; write it back
+          move.b    d1,(a2)             ; write it back
 
           rts
 
@@ -735,8 +735,8 @@ _gemsreadmbox
           jsr  _gemsholdz80
           moveq     #0,d0
           move.b    11(a7),d0
-          lea  Z80MBOXBASE,a0
-          move.b    0(a0,d0.w),d0
+          lea  Z80MBOXBASE,a2
+          move.b    0(a2,d0.w),d0
           jsr  _gemsreleasez80
 
           move.w    (sp)+,sr

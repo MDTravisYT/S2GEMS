@@ -1512,6 +1512,7 @@ loc_1072:
 ; Input our music/sound selection to the sound driver.
 
 sndDriverInput:
+	rts
 ;	jmp _gemsdmastart
 	lea	(Music_to_play&$00FFFFFF).l,a0
 	lea	($A01B80).l,a1 ; $A01B80
