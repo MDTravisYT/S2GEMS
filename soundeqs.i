@@ -1,7 +1,10 @@
 LevelMus	=	$0B
 TitleMus	=	$10
 SegaSFX		=	$14
+TwinkleSFX	=	$28
 SpinDashSFX	=	$6F
 SkidSFX		=	$73
+RingLossSFX	=	$75
+BeepSFX		=	$7A
 RingSFX		=	$7C
 JumpSFX		=	$7D

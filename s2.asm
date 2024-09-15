@@ -22953,8 +22953,6 @@ JmpTo_PlaySoundStereo
 	move.l	a2,	GEMSBuffer
 	GEMS_PlaySound	RingSFX
 	move.l	GEMSBuffer,	a2
-	jmp	(PlaySoundStereo).l
-; ===========================================================================
 	rts
 ; ===========================================================================
 
@@ -22988,7 +22986,10 @@ loc_12066:
 	move.w	#$98,d0
 
 JmpTo2_PlaySoundStereo 
-	jmp	(PlaySoundStereo).l
+	move.l	a2,	GEMSBuffer
+	GEMS_PlaySound	RingSFX
+	move.l	GEMSBuffer,	a2
+	rts
 ; End of function sub_11FC2
 
 ; ===========================================================================
@@ -23074,8 +23075,7 @@ loc_12132:
 	dbf	d5,loc_120B2
 
 loc_12142:
-	move.w	#$C6,d0
-	jsr	(PlaySoundStereo).l
+	GEMS_PlaySound	RingLossSFX
 	tst.b	objoff_3F(a0)
 	bne.s	loc_12166
 	move.w	#0,(Ring_count).w
@@ -24092,8 +24092,8 @@ loc_12E8A:
 	lea	(Object_RAM+$140).w,a1
 	move.b	#$E,(a1) ; load obj0E (flashing intro stars) at $FFFFD140
 	move.b	#6,subtype(a1)
-	moveq	#$A7,d0
-	bra.w	JmpTo4_PlaySound
+	GEMS_PlaySound	TwinkleSFX
+	rts
 ; ===========================================================================
 
 loc_12EC2:
@@ -24439,8 +24439,8 @@ loc_1319E:
 	move.w	d0,objoff_A(a0)
 	swap	d0
 	move.w	d0,x_pos(a0)
-	moveq	#$27+$80,d0 ; play intro sparkle sound
-	bra.w	JmpTo4_PlaySound
+	GEMS_PlaySound	TwinkleSFX
+	rts
 ; ===========================================================================
 ; unknown
 word_131DC:
@@ -24871,8 +24871,8 @@ Obj0F_Main:
 	move.b	d2,(Title_screen_option).w
 	andi.b	#3,d0
 	beq.s	return_13684
-	moveq	#$4D+$80,d0 ; selection blip sound
-	bsr.w	JmpTo4_PlaySound
+	GEMS_PlaySound	BeepSFX
+	rts
 
 return_13684:
 	rts
