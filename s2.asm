@@ -30,6 +30,7 @@ zeroOffsetOptimization = 0
 ; AS-specific macros and assembler settings
 ;	CPU 68000
 	include "s2.macrosetup.asm"
+	include "soundeqs.i"
 
 ; >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 ; Equates section - Names for variables.
@@ -475,6 +476,13 @@ z80_ptr function x,(x)<<8&$FF00|(x)>>8&$7F|$80
 ; macro to declare a little-endian 16-bit pointer for the Z80 sound driver
 rom_ptr_z80 macro addr
 		dc.w z80_ptr(addr)
+	endm
+	
+; play those sweet tunes
+GEMS_PlaySound	macro	soundID
+	move.l	#soundID,-(sp)
+	jsr		_gemsstartsong		; start sound
+	adda.w	#4,sp
 	endm
 
 ; >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -4629,9 +4637,7 @@ Level_PlayBgm:
 	move.w	d0,(Level_Music).w	; store level music
 	bsr.w	PlayMusic	; play level music
 	jsr	_gemsstopall
-	move.l	#$0B,-(sp)
-	jsr	_gemsstartsong		; start song
-	adda.w	#4,sp
+	GEMS_PlaySound	LevelMus
 	
 	move.b	#$34,(Object_RAM+$80).w ; load Obj34 (level title card) at $FFFFB080
 ; loc_40DA:
@@ -24106,9 +24112,7 @@ loc_12ECC:
 	st	objoff_30(a0)
 ;	moveq	#$19+$80,d0 ; title music
 ;	bra.w	JmpTo4_PlayMusic
-	move.l	#$10,-(sp)
-	jsr	_gemsstartsong		; start song
-	adda.w	#4,sp
+	GEMS_PlaySound	TitleMus
 	rts
 
 ; ===========================================================================
@@ -33470,9 +33474,7 @@ Sonic_TurnLeft:
 ;	move.w	#$A4,d0
 ;	jsr	(PlaySound).l
 
-	move.l	#$73,-(sp)
-	jsr	_gemsstartsong		; start song
-	adda.w	#4,sp
+	GEMS_PlaySound	SkidSFX
 	cmpi.b	#$C,air_left(a0)
 	bcs.s	return_1A744	; if he's drowning, branch to not make dust
 	move.b	#6,(Sonic_Dust+routine).w
@@ -33898,9 +33900,7 @@ Sonic_Jump:
 	clr.b	stick_to_convex(a0)
 ;	move.w	#$A0,d0
 ;	jsr	(PlaySound).l	; play jumping sound
-	move.l	#$58,-(sp)
-	jsr	_gemsstartsong		; start song
-	adda.w	#4,sp
+	GEMS_PlaySound	JumpSFX
 	move.b	#$13,y_radius(a0)
 	move.b	#9,x_radius(a0)
 	btst	#2,status(a0)
