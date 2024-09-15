@@ -73779,6 +73779,7 @@ off_3A1EA:
 ; ===========================================================================
 
 loc_3A1F6:
+	GEMS_PlaySound	DashSFX
 	bsr.w	LoadSubObject
 	move.w	#$1E8,x_pos(a0)
 	move.w	#$F0,objoff_A(a0)
@@ -73894,6 +73895,7 @@ loc_3A33A:
 ; ===========================================================================
 
 loc_3A346:
+	GEMS_PlaySound	DashSFX
 	addq.b	#2,routine(a0)
 	bchg	#0,render_flags(a0)
 	move.w	#$B,objoff_2A(a0)
