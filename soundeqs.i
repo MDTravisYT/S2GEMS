@@ -1,10 +1,15 @@
-Spinball = 0
+Spinball = 1
 	if	Spinball
 LevelMus	=	$0B
 TitleMus	=	$10
+ContSFX		=	$12
 SegaSFX		=	$14
 TwinkleSFX	=	$28
+TallySFX	=	$4D
+SignSFX		=	$5E
+RollSFX		=	$66
 SpinDashSFX	=	$6F
+DashSFX		=	$70
 SkidSFX		=	$73
 RingLossSFX	=	$75
 BeepSFX		=	$7A

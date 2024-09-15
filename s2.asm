@@ -25591,8 +25591,7 @@ loc_141E6:
 	add.w	d0,($FFFFFF8E).w
 	tst.w	d0
 	bne.s	loc_14256
-	move.w	#$C5,d0
-	jsr	(PlaySound).l
+	GEMS_PlaySound	TallySFX
 	addq.b	#2,routine(a0)
 	move.w	#$B4,anim_frame_duration(a0)
 	cmpi.w	#1000,($FFFFFF8E).w
@@ -25628,8 +25627,8 @@ loc_14256:
 	move.b	($FFFFFE0F).w,d0
 	andi.b	#3,d0
 	bne.s	return_14254
-	move.w	#$CD,d0
-	jmp	(PlaySound).l
+	GEMS_PlaySound	BeepSFX
+	rts
 ; ===========================================================================
 
 loc_14270:
@@ -25668,8 +25667,7 @@ loc_142B0:
 
 loc_142BC:
 	addi.b	#2,routine(a0)
-	move.w	#$BF,d0
-	jsr	(PlaySound).l
+	GEMS_PlaySound	ContSFX
 
 loc_142CC:
 	subq.w	#1,anim_frame_duration(a0)
@@ -25933,8 +25931,7 @@ loc_14500:
 	move.b	#$2A,routine(a0)
 	move.w	#$120,objoff_A(a0)
 	st	(Update_Bonus_score).w	; set to -1 (update)
-	move.w	#$CF,d0
-	jsr	(PlaySound).l
+	GEMS_PlaySound		SignSFX
 	move.w	#$5A,(Object_RAM+$800+anim_frame_duration).w
 	bra.w	loc_14692
 ; ===========================================================================
@@ -26013,8 +26010,7 @@ loc_145A8:
 loc_145B8:
 	tst.w	d0
 	bne.s	loc_14602
-	move.w	#$C5,d0
-	jsr	(PlaySound).l
+	GEMS_PlaySound		TallySFX
 	addq.b	#2,routine(a0)
 	move.w	#$78,anim_frame_duration(a0)
 	tst.w	($FFFFFF42).w
@@ -26043,8 +26039,8 @@ loc_14602:
 	move.b	($FFFFFE0F).w,d0
 	andi.b	#3,d0
 	bne.s	return_14600
-	move.w	#$CD,d0
-	jmp	(PlaySound).l
+	GEMS_PlaySound		BeepSFX
+	rts
 ; ===========================================================================
 
 loc_1461C:
@@ -26068,13 +26064,12 @@ loc_14642:
 	move.b	($FFFFFE0F).w,d0
 	andi.b	#3,d0
 	bne.s	return_14690
-	move.w	#$CD,d0
-	jmp	(PlaySound).l
+	GEMS_PlaySound		BeepSFX
+	rts
 ; ===========================================================================
 
 loc_14660:
-	move.w	#$C5,d0
-	jsr	(PlaySound).l
+	GEMS_PlaySound		TallySFX
 	addq.b	#4,routine(a0)
 	move.w	#$78,anim_frame_duration(a0)
 	cmpi.w	#2,(Player_mode).w
@@ -33516,8 +33511,7 @@ Sonic_TurnRight:
 	bgt.s	return_1A7C4
 	move.b	#$D,anim(a0)	; use "stopping" animation
 	bset	#0,status(a0)
-	move.w	#$24+$80,d0	; use "stopping" sound
-	jsr	(PlaySound).l
+	GEMS_PlaySound	SkidSFX
 	cmpi.b	#$C,air_left(a0)
 	bcs.s	return_1A7C4	; if he's drowning, branch to not make dust
 	move.b	#6,(Sonic_Dust+routine).w
@@ -33839,8 +33833,7 @@ Obj01_DoRoll:
 	move.b	#7,x_radius(a0)
 	move.b	#2,anim(a0)	; use "rolling" animation
 	addq.w	#5,y_pos(a0)
-	move.w	#$BE,d0
-	jsr	(PlaySound).l	; play rolling sound
+	GEMS_PlaySound	RollSFX
 	tst.w	inertia(a0)
 	bne.s	return_1AA36
 	move.w	#$200,inertia(a0)
@@ -34056,8 +34049,7 @@ Sonic_CheckSpindash:
 	andi.b	#$70,d0
 	beq.w	return_1AC8C
 	move.b	#9,anim(a0)
-	move.w	#$E0,d0
-	jsr	(PlaySound).l
+	GEMS_PlaySound	SpinDashSFX
 	addq.l	#4,sp
 	move.b	#1,spindash_flag(a0)
 	move.w	#0,spindash_counter(a0)
@@ -34112,8 +34104,7 @@ Sonic_UpdateSpindash:
 +
 	bset	#2,status(a0)
 	move.b	#0,(Sonic_Dust+anim).w
-	move.w	#$3C+$80,d0	; spindash zoom sound
-	jsr	(PlaySound).l
+	GEMS_PlaySound	DashSFX
 	bra.s	Obj01_Spindash_ResetScr
 ; ===========================================================================
 ; word_1AD0C:
@@ -34153,8 +34144,7 @@ Sonic_ChargingSpindash:			; If still charging the dash...
 	andi.b	#$70,d0
 	beq.w	Obj01_Spindash_ResetScr
 	move.w	#$900,anim(a0)
-	move.w	#$E0,d0
-	jsr	(PlaySound).l
+	GEMS_PlaySound	SpinDashSFX
 	addi.w	#$200,spindash_counter(a0)
 	cmpi.w	#$800,spindash_counter(a0)
 	bcs.s	Obj01_Spindash_ResetScr
