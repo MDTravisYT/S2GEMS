@@ -11335,9 +11335,13 @@ loc_9146:
 	bne.s	return_9178
 	andi.w	#$30,d0
 	beq.s	return_9178
+;	addi.w	#$80,d0
+;	bsr.w	JmpTo_PlayMusic
+	jsr		_gemsstopall
 	move.w	(Sound_test_sound).w,d0
-	addi.w	#$80,d0
-	bsr.w	JmpTo_PlayMusic
+	move.l	d0,-(sp)
+	jsr		_gemsstartsong		; start song
+	adda.w	#4,sp
 	lea	(level_select_cheat).l,a0
 	lea	(byte_97B7).l,a2
 	lea	(Level_select_flag).w,a1
@@ -11717,9 +11721,11 @@ loc_955C:
 	move.w	d0,(Sound_test_sound).w
 	andi.w	#$30,d1
 	beq.s	return_9588
+	jsr		_gemsstopall
 	move.w	(Sound_test_sound).w,d0
-	addi.w	#$80,d0
-	bsr.w	JmpTo_PlayMusic
+	move.l	d0,-(sp)
+	jsr		_gemsstartsong		; start song
+	adda.w	#4,sp
 	lea	(debug_cheat).l,a0
 	lea	(byte_97C5).l,a2
 	lea	($FFFFFFD2).w,a1
