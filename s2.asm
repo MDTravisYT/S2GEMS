@@ -24110,8 +24110,6 @@ loc_12ECC:
 	move.b	#$C9,(a1) ; load objC9 (palette change)
 	move.b	#0,subtype(a1)
 	st	objoff_30(a0)
-;	moveq	#$19+$80,d0 ; title music
-;	bra.w	JmpTo4_PlayMusic
 	GEMS_PlaySound	TitleMus
 	rts
 
@@ -33471,9 +33469,6 @@ Sonic_TurnLeft:
 	blt.s	return_1A744
 	move.b	#$D,anim(a0)	; use "stopping" animation
 	bclr	#0,status(a0)
-;	move.w	#$A4,d0
-;	jsr	(PlaySound).l
-
 	GEMS_PlaySound	SkidSFX
 	cmpi.b	#$C,air_left(a0)
 	bcs.s	return_1A744	; if he's drowning, branch to not make dust
@@ -33898,8 +33893,6 @@ Sonic_Jump:
 	addq.l	#4,sp
 	move.b	#1,jumping(a0)
 	clr.b	stick_to_convex(a0)
-;	move.w	#$A0,d0
-;	jsr	(PlaySound).l	; play jumping sound
 	GEMS_PlaySound	JumpSFX
 	move.b	#$13,y_radius(a0)
 	move.b	#9,x_radius(a0)
