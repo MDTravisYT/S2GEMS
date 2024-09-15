@@ -1,5 +1,6 @@
 Spinball = 1
 	if	Spinball
+BossMus		=	$04
 LevelMus	=	$0B
 TitleMus	=	$10
 ContSFX		=	$12

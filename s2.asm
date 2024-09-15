@@ -18300,8 +18300,9 @@ LevEvents_EHZ2_Routine3:
 	move.w	#$426,y_pos(a1)
 +
 	addq.b	#2,(Dynamic_Resize_Routine).w ; => LevEvents_EHZ2_Routine4
-	move.w	#$93,d0
-	bsr.w	JmpTo3_PlayMusic
+	jsr		_gemsstopall
+	GEMS_PlaySound	BossMus
+	rts
 
 return_E736:
 	rts
@@ -18409,8 +18410,9 @@ LevEvents_MTZ3_Routine4:
 	move.b	#$54,(a1) ; load obj54 (MTZ boss)
 +
 	addq.b	#2,(Dynamic_Resize_Routine).w ; => LevEvents_MTZ3_Routine5
-	move.w	#$93,d0
-	bsr.w	JmpTo3_PlayMusic
+	jsr		_gemsstopall
+	GEMS_PlaySound	BossMus
+	rts
 
 return_E82C:
 	rts
@@ -19138,8 +19140,9 @@ LevEvents_HTZ2_Routine8:
 	move.b	#$52,(a1) ; load obj52 (HTZ boss)
 +
 	addq.b	#2,(Dynamic_Resize_Routine).w ; => LevEvents_HTZ2_Routine9
-	move.w	#$93,d0
-	bsr.w	JmpTo3_PlayMusic
+	jsr		_gemsstopall
+	GEMS_PlaySound	BossMus
+	rts
 
 return_F01E:
 	rts
@@ -19245,8 +19248,9 @@ LevEvents_OOZ2_Routine3:
 	move.b	#$55,(a1) ; load obj55 (OOZ boss)
 +
 	addq.b	#2,(Dynamic_Resize_Routine).w
-	move.w	#$93,d0
-	bsr.w	JmpTo3_PlayMusic
+	jsr		_gemsstopall
+	GEMS_PlaySound	BossMus
+	rts
 
 return_F122:
 	rts
@@ -19354,8 +19358,9 @@ LevEvents_MCZ2_Routine3:
 	move.b	#$57,(a1) ; load obj57 (MCZ boss)
 +
 	addq.b	#2,(Dynamic_Resize_Routine).w
-	move.w	#$93,d0
-	bsr.w	JmpTo3_PlayMusic
+	jsr		_gemsstopall
+	GEMS_PlaySound	BossMus
+	rts
 
 return_F23C:
 	rts
@@ -19455,8 +19460,9 @@ loc_F318:
 	move.b	#$51,(a1) ; load obj51
 +
 	addq.b	#2,(Dynamic_Resize_Routine).w
-	move.w	#$93,d0
-	bsr.w	JmpTo3_PlayMusic
+	jsr		_gemsstopall
+	GEMS_PlaySound	BossMus
+	rts
 
 return_F34E:
 	rts
@@ -19541,8 +19547,9 @@ loc_F3FA:
 	move.b	#$5D,(a1) ; load obj5D
 +
 	addq.b	#2,(Dynamic_Resize_Routine).w
-	move.w	#$93,d0
-	bsr.w	JmpTo3_PlayMusic
+	jsr		_gemsstopall
+	GEMS_PlaySound	BossMus
+	rts
 
 return_F430:
 	rts
@@ -19689,8 +19696,9 @@ loc_F55C:
 	cmpi.b	#$5A,($FFFFF73A).w
 	bcs.s	return_F588
 	addq.b	#2,(Dynamic_Resize_Routine).w
-	move.w	#$93,d0
-	bsr.w	JmpTo3_PlayMusic
+	jsr		_gemsstopall
+	GEMS_PlaySound	BossMus
+	rts
 
 return_F588:
 	rts
