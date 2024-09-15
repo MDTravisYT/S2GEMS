@@ -29,8 +29,7 @@ _Z80END
 ;     align     2
 	even
 	
-CustomBnk = 1
-	if	CustomBnk
+	if	Spinball
 _patchbank
      binclude   "TempDrvr/Sonic Spinball (Japan) - 01 Instruments.bin"
 _envbank
