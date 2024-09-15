@@ -380,6 +380,7 @@ Two_player_mode =		ramaddr( $FFFFFFD8 ) ; flag (0 for main game)
 
 ; Values in these variables are passed to the sound driver during V-INT.
 ; They use a playlist index, not a sound test index.
+GEMSBuffer	=	ramaddr( $FFFFFFE0 )	;	storing stuff within what was left behind
 Music_to_play =			ramaddr( $FFFFFFE0 )
 SFX_to_play =			ramaddr( $FFFFFFE1 ) ; normal
 SFX_to_play_2 =			ramaddr( $FFFFFFE2 ) ; alternating stereo
@@ -4050,11 +4051,10 @@ Sega_WaitPalette:
 	jsr	(BuildSprites).l
 	tst.b	($FFFFF660).w
 	beq.s	Sega_WaitPalette
-	move.b	#$7A+$80,d0
-	bsr.w	PlaySound	; play "SEGA" sound
 	move.b	#2,(Delay_Time).w
 	bsr.w	DelayProgram
 	move.w	#$B4,(Demo_Time_left).w
+	GEMS_PlaySound	SegaSFX
 ; loc_3940:
 Sega_WaitEnd:
 	move.b	#$14,(Delay_Time).w
@@ -4383,8 +4383,7 @@ TailsNameCheat:
 	tst.b	1(a0)
 	bne.s	return_3DEC
 	bchg	#7,(Graphics_Flags).w ; turn on the cheat that changes MILES to "TAILS"
-	move.b	#$35+$80,d0 ; play the ring sound for a successfully entered cheat
-	bsr.w	PlaySound
+	GEMS_PlaySound	RingSFX
 
 loc_3DE6:
 	move.w	#0,(Correct_cheat_entries).w
@@ -9729,8 +9728,7 @@ ObjDB_Sonic_StartRunning:
 	addq.b	#2,routine(a0) ; => ObjDB_Sonic_Run
 	move.b	#$21,anim(a0)
 	clr.w	inertia(a0)
-	move.b	#$60+$80,d0 ; super peel-out sound
-	bsr.w	PlaySound
+	GEMS_PlaySound	SpinDashSFX
 
 ; loc_7BFA:
 ObjDB_Sonic_Run:
@@ -9771,8 +9769,7 @@ ObjDB_Tails_StartRunning:
 	move.w	#$7A0,art_tile(a0)
 	move.b	#0,anim(a0)
 	clr.w	inertia(a0)
-	move.b	#$60+$80,d0 ; super peel-out sound
-	bsr.w	PlaySound
+	GEMS_PlaySound	SpinDashSFX
 
 ; loc_7C88:
 ObjDB_Tails_Run:
@@ -11924,8 +11921,7 @@ loc_9746:
 	tst.b	1(a0)
 	bne.s	loc_9770
 	move.w	#$101,(a1)
-	move.b	#$35+$80,d0 ; ring sound on correct cheat entry
-	bsr.w	JmpTo_PlaySound
+	GEMS_PlaySound	RingSFX
 
 loc_976A:
 	move.w	#0,(Correct_cheat_entries).w
@@ -22934,7 +22930,6 @@ loc_11FC8:
 	addq.w	#1,($FFFFFEF0).w
 
 loc_11FD4:
-
 	move.w	#$B5,d0
 	cmpi.w	#999,(Ring_count).w
 	bcc.s	JmpTo_PlaySoundStereo
@@ -22955,6 +22950,9 @@ loc_1200A:
 	move.w	#$98,d0
 
 JmpTo_PlaySoundStereo 
+	move.l	a2,	GEMSBuffer
+	GEMS_PlaySound	RingSFX
+	move.l	GEMSBuffer,	a2
 	jmp	(PlaySoundStereo).l
 ; ===========================================================================
 	rts
@@ -22972,7 +22970,7 @@ loc_1202A:
 
 loc_12036:
 	tst.w	(Two_player_mode).w
-	beq.s	loc_11FD4
+	beq.w	loc_11FD4
 	ori.b	#1,(Update_HUD_rings_2P).w
 	move.w	#$B5,d0
 	cmpi.w	#$64,(Ring_count_2P).w
