@@ -24808,8 +24808,8 @@ loc_135D6:
 	dbf	d6,loc_135D6
 	tst.b	objoff_30(a0)
 	bne.s	return_135E8
-	moveq	#$19+$80,d0 ; title music
-	bsr.w	JmpTo4_PlayMusic
+	jsr		_gemsstopall
+	GEMS_PlaySound	TitleMus
 
 return_135E8:
 
@@ -31694,8 +31694,8 @@ loc_19452:
 	bne.s	+
 	move.w	#5000,($FFFFFF92).w
 +
-	move.w	#$9A,d0
-	jsr	(PlayMusic).l
+	jsr		_gemsstopall
+	GEMS_PlaySound	ClearMus
 
 return_194D0:
 	rts
@@ -34722,8 +34722,8 @@ Obj01_Finished:
 	clr.b	(Update_HUD_timer).w
 	clr.b	(Update_HUD_timer_2P).w
 	move.b	#8,routine(a0)	; => Obj01_Gone
-	move.w	#$9B,d0
-	jsr	(PlayMusic).l
+	jsr		_gemsstopall
+	GEMS_PlaySound	GameOverMus
 	moveq	#3,d0
 	jmp	(LoadPLC).l
 ; End of function CheckGameOver
@@ -37436,8 +37436,8 @@ Obj02_Finished:
 	clr.b	(Update_HUD_timer).w
 	clr.b	(Update_HUD_timer_2P).w
 	move.b	#8,routine(a0)
-	move.w	#$9B,d0
-	jsr	(PlayMusic).l
+	jsr		_gemsstopall
+	GEMS_PlaySound	GameOverMus
 	moveq	#3,d0
 	jmp	(LoadPLC).l
 ; End of function Obj02_CheckGameOver
@@ -38282,8 +38282,10 @@ Obj0A_Countdown:
 	bne.s	+
 	tst.b	objoff_3F(a0)
 	bne.s	+
-	move.w	#$1F+$80,d0
-	jsr	(PlayMusic).l	; play countdown music
+	move.l	a2,	GEMSBuffer
+	jsr		_gemsstopall
+	GEMS_PlaySound	DrownMus
+	move.l	GEMSBuffer,	a2
 +
 	subq.b	#1,objoff_32(a0)
 	bpl.s	Obj0A_ReduceAir
@@ -38449,7 +38451,8 @@ ResumeMusic:
 	beq.s	+		; branch if not in a boss fight
 	move.w	#$13+$80,d0	; prepare to play boss music
 +
-	jsr	(PlayMusic).l
+	jsr	_gemsstopall
+	GEMS_PlaySound	LevelMus
 ; return_1D858:
 ResumeMusic_Done:
 	move.b	#$1E,air_left(a1)	; reset air to full
@@ -68063,8 +68066,8 @@ loc_3610C:
 	bcs.s	return_36140
 	move.w	#$63,objoff_2A(a0)
 	move.b	#8,routine(a0)
-	move.w	#$9D,d0
-	jsr	(PlayMusic).l
+	jsr		_gemsstopall
+	GEMS_PlaySound	EmeraldMus
 
 return_36140:
 	rts
@@ -82848,8 +82851,8 @@ loc_40FE4:
 	move.b	#$3C,(a1)
 	cmpi.b	#$C,-1(a1)
 	bne.s	loc_41010
-	move.w	#$9F,d0
-	jsr	(PlayMusic).l
+	jsr		_gemsstopall
+	GEMS_PlaySound	DrownMus
 
 loc_41010:
 	subq.b	#1,-(a1)

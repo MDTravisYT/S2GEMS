@@ -2,9 +2,13 @@ Spinball = 1
 	if	Spinball
 BossMus		=	$04
 LevelMus	=	$0B
+EmeraldMus	=	$0E
+ClearMus	=	$0E
 TitleMus	=	$10
 ContSFX		=	$12
+GameOverMus	=	$13
 SegaSFX		=	$14
+DrownMus	=	$16
 TwinkleSFX	=	$28
 TallySFX	=	$4D
 SignSFX		=	$5E
