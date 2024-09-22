@@ -1,23 +1,23 @@
-;
-; Sequence Offset Table
-;
+*
+* Sequence Offset Table
+*
 
 	dc.b	$04,$00		; Offset to sequence #0: 4
 	dc.b	$05,$00		; Offset to sequence #1: 5
-;
-; Sequence Descriptors
-;
+*
+* Sequence Descriptors
+*
 
-; Sequence 0 "BLANK"
+* Sequence 0 "BLANK"
 	dc.b	$00			; channel count = 0
-; Sequence 1 "INSTRUMENT TEST"
+* Sequence 1 "INSTRUMENT TEST"
 	dc.b	$01			; channel count = 1
 	dc.b	$08,$00		; offset to channel 0 = 8
-;
-; Sequence Channel Data
-;
+*
+* Sequence Channel Data
+*
 
-; Sequence 1, Channel 0:
+* Sequence 1, Channel 0:
 	dc.b	$C0,$61,$00,$B0,$C1,$E0,$30,$C0
 	dc.b	$61,$01,$C1,$E0,$30,$C0,$61,$02
 	dc.b	$C1,$E0,$30,$C0,$61,$03,$C1,$E0
